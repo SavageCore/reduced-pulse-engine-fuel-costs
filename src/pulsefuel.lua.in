@@ -1,0 +1,82 @@
+-- Reduced Pulse Engine Fuel Costs - @VARIANT_LABEL@
+-- RENDERED FILE - do not edit; edit src/pulsefuel.lua.in and run make release.
+--
+-- Updated by SavageCore
+--
+-- Approach ported from "Reduced Ship Launch Fuel Costs (Or Increased)"
+-- by Cykron0271, original mod by Lexman6 and Lo2k
+-- https://www.nexusmods.com/nomanssky/mods/3490
+
+local VariantLabel = "@VARIANT_LABEL@" -- "Half", "Quarter" or "Tenth"
+
+-- Per-tech final multipliers for Ship_PulseDrive_MiniJumpFuelSpending.
+-- These are the vanilla values scaled by the variant factor, not a flat
+-- absolute number, so the Luminance engine keeps its built-in 50% efficiency
+-- advantage instead of gaining a buff or a nerf depending on the variant.
+local Jump1       = @JUMP1@         -- SHIPJUMP1      pulse engine,   vanilla 1.00
+local JumpAlien   = @JUMP_ALIEN@    -- SHIPJUMP_ALIEN luminance,      vanilla 0.50
+local JumpSpec    = @JUMP_SPEC@     -- SHIPJUMP_SPEC  royal engine,   vanilla 1.00
+local JumpRobo    = @JUMP_ROBO@     -- SHIPJUMP_ROBO  robo engine,    vanilla 1.00
+
+local VariantDesc = "@DESC@"
+
+local ModName            = "Reduced Pulse Engine Fuel Costs"
+local OriginalModAuthor  = "Cykron0271 -- original mod by Lexman6 and Lo2k"
+local ModAuthor          = "SavageCore"
+local GameVersion        = "v7.04" -- Cosmos
+local FileSource         = "METADATA/REALITY/TABLES/NMS_REALITY_GCTECHNOLOGYTABLE.MBIN"
+local PulseFuelStat      = "Ship_PulseDrive_MiniJumpFuelSpending"
+
+-- The four ship pulse engine technologies. The upgrade technologies that
+-- reduce pulse fuel on top of the engine (UT_PULSEFUEL, PHOTONIX_CORE,
+-- SOLAR_SAIL) are deliberately NOT touched, so player upgrades keep
+-- working exactly as they do in vanilla.
+local PulseTechs = {
+    {"SHIPJUMP1",      Jump1},
+    {"SHIPJUMP_ALIEN", JumpAlien},
+    {"SHIPJUMP_SPEC",  JumpSpec},
+    {"SHIPJUMP_ROBO",  JumpRobo},
+}
+
+-- One change block per tech. All four are identical apart from the tech ID
+-- and the value, so generate them rather than writing four near-identical
+-- literal tables.
+--
+-- SPECIAL_KEY_WORDS is a flat list of (name, value) pairs and MUST have an
+-- even length. The real nesting under a tech is
+--   StatBonuses -> StatBonuses(GcStatsBonus) -> Stat(GcStatsTypes) -> StatsType
+-- but "Stat" is deliberately NOT named in the keyword path. The StatsType
+-- leaf is matched by recursive search from the GcStatsBonus node, and it is
+-- unique within a tech, so it needs no help. Naming "Stat" as well produces
+-- an odd-length list, AMUMSS silently discards the trailing entry, the path
+-- stops matching, and the Bonus change is applied to EVERY StatBonuses in
+-- the whole technology table instead of the one intended. Verified against
+-- v7.04: naming Stat rewrites 501 Bonus values, omitting it rewrites 1.
+local MxmlChangeTable = {}
+for _, tech in ipairs(PulseTechs) do
+    MxmlChangeTable[#MxmlChangeTable + 1] = {
+        ["SPECIAL_KEY_WORDS"]  = {"ID", tech[1], "StatBonuses", "GcStatsBonus", "StatsType", PulseFuelStat},
+        ["SECTION_UP"]         = 1,
+        ["REPLACE_TYPE"]       = "ALL",
+        ["VALUE_CHANGE_TABLE"] = {{"Bonus", tech[2]}},
+    }
+end
+
+NMS_MOD_DEFINITION_CONTAINER = {
+    ["MOD_FILENAME"]    = ModName.." - "..VariantLabel..".pak",
+    ["MOD_DESCRIPTION"] = VariantDesc.." - Originally created by "..OriginalModAuthor,
+    ["MOD_AUTHOR"]      = ModAuthor,
+    ["NMS_VERSION"]     = GameVersion,
+    ["MODIFICATIONS"]   =
+    {
+        {
+            ["MBIN_CHANGE_TABLE"]   =
+            {
+                {
+                    ["MBIN_FILE_SOURCE"]    = {FileSource},
+                    ["MXML_CHANGE_TABLE"]   = MxmlChangeTable,
+                },
+            }
+        },
+    }
+}

@@ -1,0 +1,40 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://qconsulting.ca/fo3/ModConfig5.0.xsd">
+  <moduleName>Reduced Pulse Engine Fuel Costs</moduleName>
+  <installSteps order="Explicit">
+    <installStep name="Choose pulse engine fuel usage">
+      <optionalFileGroups order="Explicit">
+        <group name="Pulse Engine Fuel" type="SelectExactlyOne">
+          <plugins order="Explicit">
+            <plugin name="Half">
+              <description>50% fuel - pulse jumps burn half as much Tritium or Pyrite</description>
+              <files>
+                <folder source="Half" destination="Reduced Pulse Engine Fuel Costs - Half" priority="0" />
+              </files>
+              <typeDescriptor>
+                <type name="Optional" />
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Quarter">
+              <description>25% fuel - a quarter of the normal pulse jump fuel cost</description>
+              <files>
+                <folder source="Quarter" destination="Reduced Pulse Engine Fuel Costs - Quarter" priority="0" />
+              </files>
+              <typeDescriptor>
+                <type name="Optional" />
+              </typeDescriptor>
+            </plugin>
+            <plugin name="Tenth">
+              <description>10% fuel - long range pulse jumps for very little fuel</description>
+              <files>
+                <folder source="Tenth" destination="Reduced Pulse Engine Fuel Costs - Tenth" priority="0" />
+              </files>
+              <typeDescriptor>
+                <type name="Optional" />
+              </typeDescriptor>
+            </plugin>
+          </plugins>
+        </group>
+      </optionalFileGroups>
+    </installStep>
+  </installSteps>
+</config>
