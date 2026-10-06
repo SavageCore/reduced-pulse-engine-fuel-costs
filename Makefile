@@ -29,7 +29,7 @@ AMUMSS_HOME ?= $(HOME)/AMUMSS
 AMUMSS_LINUX ?= $(HOME)/Git/AMUMSS/linux
 
 # Mod version
-VERSION      := 0.0.0
+VERSION      := 0.1.0
 
 MOD_SET      := Reduced Pulse Engine Fuel Costs
 
