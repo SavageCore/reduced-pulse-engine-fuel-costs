@@ -2,7 +2,7 @@
 """Regenerate Nexus page images from the source screenshot.
 
 Deterministic rebuild of what was previously done ad-hoc:
-  assets/gallery-pulse-1920x1080.jpg  (16:9 downscale, gallery slot)
+  assets/gallery-1920x1080.jpg  (16:9 downscale, gallery slot)
   assets/header-1300x372.jpg            (wide crop + title overlay, banner)
 
 Usage: python3 assets/generate.py   (or: make assets)
@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SRC = os.path.join(HERE, "src", "pulse-fuel.jpg")
-GAL = os.path.join(HERE, "gallery-pulse-1920x1080.jpg")
+GAL = os.path.join(HERE, "gallery-1920x1080.jpg")
 HDR = os.path.join(HERE, "header-1300x372.jpg")
 
 # In-game heading typeface, vendored (SIL OFL 1.1):

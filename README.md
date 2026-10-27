@@ -49,14 +49,16 @@ make release      # clean rebuild + verify + pack dist/ zip (default)
 make verify       # sanity-check the built outputs
 make clean        # remove build/ and dist/
 make assets       # regenerate Nexus page images (needs assets/src/pulse-fuel.jpg)
-
-make release VERSION=0.1.0   # override the version in the zip name
 ```
 
-`VERSION` in the `Makefile` is currently **0.0.0**. It is a development build:
-the generated patch is verified against the v7.04 technology table, and the
+`VERSION` in the `Makefile` is the mod version, published as the version of
+the Nexus release. It is deliberately not part of the mod name: the artifact
+is named after the mod alone, because a mod manager names the installed mod
+after the archive file name and shows the version in a column of its own.
+
+The generated patch is verified against the v7.06 technology table, and the
 fuel drain change has been confirmed in game, but the shipped variants have not
-been signed off yet. It becomes 0.1.0 in its own commit once they have.
+been signed off yet.
 
 `make build` temporarily stages the variant scripts into
 `$(AMUMSS_HOME)/ModScript` (existing content moved aside and restored),
@@ -67,13 +69,13 @@ variant, that each of the four techs got the requested value in the correct
 `StatBonuses` slot, and that **exactly four** `Bonus` values were patched in
 total. That last check exists because of how AMUMSS fails: a
 `SPECIAL_KEY_WORDS` path that stops matching does not error, it silently
-applies the change to every `StatBonuses` in the table (501 of them in v7.04)
+applies the change to every `StatBonuses` in the table (501 of them in v7.06)
 and ships that. See the comment on `SPECIAL_KEY_WORDS` in
 `src/pulsefuel.lua.in`.
 
 ## Release
 
-`make release` creates `dist/Reduced Pulse Engine Fuel Costs <VERSION>.zip`,
+`make release` creates `dist/Reduced Pulse Engine Fuel Costs.zip`,
 which is the zip to import into
 [Amethyst](https://github.com/ChrisDKN/Amethyst-Mod-Manager)/[Vortex](https://github.com/Nexus-Mods/Vortex)
 or upload to Nexus. `fomod/` sits at the zip root, which is how mod managers
@@ -130,7 +132,7 @@ for tech in t.getroot().find('Property').findall('Property'):
 EOF
 ```
 
-Expected as of v7.04: the four `SHIPJUMP*` engines at `_index=1`, plus
+Expected as of v7.06: the four `SHIPJUMP*` engines at `_index=1`, plus
 `UT_PULSEFUEL` / `PHOTONIX_CORE` / `SOLAR_SAIL` at `_index=0` (which this mod
 ignores). If the four engines move off `_index=1`, update `PULSE_BONUS_INDEX`
 in the `Makefile` or `make verify` will fail loudly rather than quietly
