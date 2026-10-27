@@ -79,7 +79,7 @@ and ships that. See the comment on `SPECIAL_KEY_WORDS` in
 which is the zip to import into
 [Amethyst](https://github.com/ChrisDKN/Amethyst-Mod-Manager)/[Vortex](https://github.com/Nexus-Mods/Vortex)
 or upload to Nexus. `fomod/` sits at the zip root, which is how mod managers
-detect an installer.
+detect an installer. For a manual install, copy the folder for the option you want into `GAMEDATA/MODS`.
 
 ## Game updates / versioning
 
